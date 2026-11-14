@@ -11,7 +11,7 @@
 
 ## Nome do grupo
 
-[Nome do grupo]
+Grupo 2
 
 ## 👨‍🎓 Integrantes
 
@@ -20,8 +20,7 @@
 
 ## 👩‍🏫 Professores
 
-- Tutor(a): [Nome do tutor]
-- Coordenador(a): André Godoi Chiovato
+- Tutor(a): Lucas Gomes Jorge Gonçalez
 
 ---
 
