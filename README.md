@@ -15,7 +15,7 @@ Grupo 2
 
 ## 👨‍🎓 Integrantes
 
-- Lisandra Araujo (RM: [RM])
+- Lisandra Araujo (RM: [574055])
 - Eduardo Alves (RM: [RM])
 
 ## 👩‍🏫 Professores
