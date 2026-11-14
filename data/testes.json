@@ -1,0 +1,21 @@
+{
+  "descricao": "Perguntas de teste. esperado_status pode ser ok, ambiguo, sem_resposta ou vazio. Quando o status é ok, esperado_id indica a orientação correta.",
+  "testes": [
+    {"id": "T01", "tipo": "direta", "tema": null, "pergunta": "golpe do pix", "esperado_status": "ok", "esperado_id": "G01"},
+    {"id": "T02", "tipo": "direta", "tema": null, "pergunta": "como criar uma senha forte", "esperado_status": "ok", "esperado_id": "C02"},
+    {"id": "T03", "tipo": "direta", "tema": null, "pergunta": "o que é a LGPD", "esperado_status": "ok", "esperado_id": "P01"},
+    {"id": "T04", "tipo": "direta", "tema": null, "pergunta": "quero excluir meus dados", "esperado_status": "ok", "esperado_id": "P02"},
+    {"id": "T05", "tipo": "reformulacao", "tema": null, "pergunta": "me roubaram dinheiro pelo pix, o que faço", "esperado_status": "ok", "esperado_id": "G01"},
+    {"id": "T06", "tipo": "reformulacao", "tema": null, "pergunta": "ligaram dizendo ser do banco e pediram o token", "esperado_status": "ok", "esperado_id": "G02"},
+    {"id": "T07", "tipo": "reformulacao", "tema": null, "pergunta": "recebi um email estranho com um link", "esperado_status": "ok", "esperado_id": "G03"},
+    {"id": "T08", "tipo": "reformulacao", "tema": null, "pergunta": "perdi acesso à minha conta do Instagram", "esperado_status": "ok", "esperado_id": "C04"},
+    {"id": "T09", "tipo": "reformulacao", "tema": null, "pergunta": "como confirmo que um site é do governo", "esperado_status": "ok", "esperado_id": "S01"},
+    {"id": "T10", "tipo": "reformulacao", "tema": null, "pergunta": "posso usar wifi de restaurante para acessar o banco", "esperado_status": "ok", "esperado_id": "S03"},
+    {"id": "T11", "tipo": "fora_da_base", "tema": null, "pergunta": "qual a previsão do tempo para amanhã", "esperado_status": "sem_resposta", "esperado_id": null},
+    {"id": "T12", "tipo": "fora_da_base", "tema": null, "pergunta": "como fazer um bolo de chocolate", "esperado_status": "sem_resposta", "esperado_id": null},
+    {"id": "T13", "tipo": "fora_da_base", "tema": null, "pergunta": "quem ganhou a copa do mundo", "esperado_status": "sem_resposta", "esperado_id": null},
+    {"id": "T14", "tipo": "limite_entrada_vazia", "tema": null, "pergunta": "", "esperado_status": "vazio", "esperado_id": null},
+    {"id": "T15", "tipo": "limite_ambiguidade", "tema": null, "pergunta": "conta", "esperado_status": "ambiguo", "esperado_id": null},
+    {"id": "T16", "tipo": "limite_tema_sem_correspondencia", "tema": "privacidade", "pergunta": "golpe do pix", "esperado_status": "sem_resposta", "esperado_id": null}
+  ]
+}
