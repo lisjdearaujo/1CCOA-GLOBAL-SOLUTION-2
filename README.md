@@ -53,7 +53,6 @@ Cidadãos encontram com frequência informações dispersas, termos técnicos e 
 │   └── testes.json          Perguntas de teste com o resultado esperado
 ├── docs/
 │   ├── prompts.md           Modelos de instrução de resposta (fase 5) e comparação
-│   ├── relatorio_roteiro.md Roteiro do relatório em PDF
 │   ├── resultados_testes.md Resultados gerados por src/testes.py
 │   ├── fontes_conferidas.md Conferência das referências e datas
 │   ├── teste_usabilidade.md Roteiro e resultados do teste de facilidade de uso
