@@ -53,6 +53,7 @@ Cidadãos encontram com frequência informações dispersas, termos técnicos e 
 │   ├── prompts.md           Modelos de instrução de resposta (fase 5) e comparação
 │   ├── relatorio_roteiro.md Roteiro do relatório em PDF
 │   ├── resultados_testes.md Resultados gerados por src/testes.py
+│   ├── fontes_conferidas.md Conferência das referências e datas
 │   ├── teste_usabilidade.md Roteiro e registro do teste de facilidade de uso
 │   ├── uso_ia.md            Uso de IA e validação crítica
 │   ├── link_video.txt       Link do vídeo no YouTube
@@ -82,7 +83,7 @@ A base fica em `data/base.json`. Cada registro tem obrigatoriamente os campos:
 
 **Validação na leitura:** `carregar_base()` em `src/logica.py` verifica se o arquivo existe, se o JSON é válido, se a base não está vazia, se os campos obrigatórios estão preenchidos, se os temas são conhecidos e se os ids não se repetem. Em caso de erro, mostra uma mensagem clara e o programa não tenta responder.
 
-**Como acrescentar ou corrigir registros:** basta editar `data/base.json`. Não é preciso mexer no código. Um novo tema exige apenas incluí-lo em `NOMES_TEMAS` e, se quiser, em `GRAFO_TEMAS`.
+**Como acrescentar ou corrigir registros:** basta editar `data/base.json`. Não é preciso mexer nas regras de pontuação. Um novo tema exige incluí-lo em `NOMES_TEMAS` e em `GRAFO_TEMAS`. As referências consultadas estão também em `docs/fontes_conferidas.md` (conferidas em 19/11/2026).
 
 **Estruturas utilizadas:**
 
@@ -96,12 +97,14 @@ A base fica em `data/base.json`. Cada registro tem obrigatoriamente os campos:
 1. A pergunta é normalizada: letras minúsculas, sem acentos e sem pontuação.
 2. Palavras sem significado (stopwords, como "de", "o", "para") são descartadas.
 3. Cada registro recebe uma pontuação:
-   - **+2** quando uma expressão de palavra-chave aparece inteira na pergunta (por exemplo, "golpe do pix");
-   - **+1** para cada palavra em comum entre a pergunta e as palavras-chave.
-4. O registro de maior pontuação é escolhido. Se a pontuação máxima for zero, o sistema informa que não há resposta confiável.
-5. **Empate:** se mais de um registro tiver a mesma pontuação máxima, o sistema mostra as opções e o usuário escolhe. Ele não escolhe sozinho entre candidatos empatados.
+   - **+2 por palavra relevante** de uma expressão de palavra-chave encontrada inteira na pergunta (por exemplo, "golpe do pix");
+   - **+1** para cada palavra relevante em comum entre a pergunta e as palavras-chave.
+4. O registro de maior pontuação é escolhido. Se a pontuação for zero ou houver apenas uma coincidência fraca numa pergunta longa (3 ou mais palavras relevantes e pontuação de até 1), o sistema informa que não há resposta confiável.
+5. **Empate:** se mais de um registro tiver a mesma pontuação máxima, o sistema mostra as opções e o usuário escolhe. Ele não decide sozinho entre candidatos empatados.
 
-Consultas por tema filtram a base antes da busca.
+As grafias `Wi-Fi`/`wifi` e `e-mail`/`email` são normalizadas da mesma forma. A busca é uma heurística de palavras-chave, não uma análise de intenção ou um modelo de IA.
+
+**Consulta por tema:** a opção 2 do terminal permite escolher um assunto e uma orientação sem digitar uma pergunta. Após ler a resposta, o usuário pode selecionar um dos temas relacionados no grafo e continuar a navegação. A interface web também disponibiliza essa seleção. O filtro por tema na busca textual restringe os registros antes da pontuação.
 
 ---
 
@@ -125,39 +128,38 @@ Em todas as respostas, valem as mesmas regras:
 
 ## 🧪 Plano de testes e resultados
 
-**Plano:** 16 perguntas de teste em `data/testes.json`, divididas em:
+**Plano:** 16 perguntas em `data/testes.json`, organizadas em quatro tipos:
 
-- **Diretas** (T01 a T04): a pergunta usa as palavras-chave da base.
-- **Reformulações** (T05 a T10): a mesma orientação, escrita com outras palavras.
-- **Fora da base** (T11 a T13): assuntos que a base não cobre.
-- **Casos limite** (T14 a T16): entrada vazia, consulta ambígua e tema sem correspondência.
+- 4 perguntas diretas (T01 a T04);
+- 6 reformulações (T05 a T10);
+- 3 perguntas fora da base (T11 a T13);
+- 3 situações-limite (T14 a T16): entrada vazia, ambiguidade e filtro sem correspondência.
 
-**Como executar os testes:** `python src/testes.py`. O script compara o resultado obtido com o esperado, mede o tempo de cada consulta e grava `docs/resultados_testes.md`.
+O script `python src/testes.py` mede o tempo real de cada consulta, compara status e identificador esperados com os retornados, valida a equivalência da tabela-verdade da triagem e compara os dois modelos de instrução nas perguntas com resposta única. O resultado é gravado em `docs/resultados_testes.md` com **resposta esperada, resposta obtida, classificação e tempo**.
 
-**Resultados obtidos na versão entregue:**
+**Resultados da execução local de 19/11/2026:**
 
-| Indicador | Valor |
+| Indicador | Resultado |
 |---|---|
-| Perguntas testadas | 16 |
-| Respostas corretas | 13 |
-| Taxa de acerto | 81,2% |
-| Tempo médio de consulta | 1.005 ms |
-| Tabela-verdade da triagem consistente | sim (16 de 16) |
+| Perguntas avaliadas | 16 |
+| Consultas corretas neste conjunto | 16 |
+| Taxa de acerto observada | **100,0%** |
+| Tempo médio observado | aproximadamente **0,9 ms** (varia conforme o computador) |
+| Equivalência da triagem | 16 de 16 combinações consistentes |
+| Orientações com fonte e data conferidas | 17 de 17 |
+| Comparação dos modelos | 10 consultas com resposta única: ambos citaram fonte e aviso |
 
-**Erros observados e o que eles mostram:**
+**Correções realizadas após a avaliação inicial:**
 
-- **T04, "quero excluir meus dados":** a palavra "dados" aparece em mais de uma orientação de privacidade, e o sistema pediu que o usuário escolhesse. O esperado era a orientação P02. Isso mostra que a busca por palavras em comum é sensível a palavras genéricas.
-- **T10, "wifi de restaurante para acessar o banco":** a pergunta combina "wifi" com "banco", e o sistema encontrou empate entre a orientação sobre Wi-Fi público e a de golpes do Pix. Mostra a limitação de uma busca sem sinônimos e sem pesos por tipo de palavra.
-- **T13, "quem ganhou a copa do mundo":** a palavra "ganhou" é uma palavra-chave da orientação sobre prêmios. O sistema respondeu com essa orientação, quando o esperado era dizer que o assunto não está na base. Este é um erro de falsa correspondência, o mais importante para um assistente de orientação.
+- T04, "quero excluir meus dados": foram adicionadas reformulações sobre exclusão, permitindo selecionar a orientação P02;
+- T10, "wifi de restaurante para acessar o banco": foram incluídas expressões compatíveis com Wi-Fi em locais públicos, resultando em S03;
+- T13, "quem ganhou a copa do mundo": a palavra solta "ganhou" foi retirada das palavras-chave de golpes com prêmios e evitou a falsa orientação G05.
 
-**Teste de facilidade de uso:** realizado com [número] pessoa(s) de fora do grupo, com roteiro de quatro tarefas em `docs/teste_usabilidade.md`. Resultado: [resumo].
+A avaliação anterior tinha **13/16 (81,2%)**; os resultados atuais são **16/16 (100,0%)** nas mesmas perguntas. Isso **não garante 100% de precisão** em perguntas desconhecidas: a amostra é pequena e os casos corrigidos pertencem à própria bateria de teste. Novos exemplos devem ser coletados para uma avaliação independente.
 
-**Interpretação:** a taxa de acerto é boa para perguntas com as palavras da base, mas cai em perguntas com palavras genéricas, e o erro mais grave é a falsa correspondência (T13). A consulta é rápida o suficiente para uso interativo. A avaliação tem limitações: são 16 perguntas, uma base pequena e poucos participantes no teste de uso.
+**Facilidade de uso:** o roteiro de quatro tarefas está em `docs/teste_usabilidade.md`. **A execução com participante externo ainda precisa ser registrada pela equipe**; os testes automatizados não substituem essa etapa.
 
-**Melhorias possíveis:**
-1. Tratar palavras genéricas com peso menor (por exemplo, "dados" ou "ganhou" valer menos que expressões completas), e não contar palavras isoladas que aparecem em muitos registros.
-2. Adicionar um limiar mínimo de pontuação, para que correspondências fracas sejam tratadas como "sem resposta" em vez de respondidas.
-3. Incluir um dicionário de sinônimos (por exemplo "conta invadida" e "hackearam") para melhorar as reformulações.
+**Interpretação e melhorias:** a busca por palavras-chave é rápida e reproduzível, mas depende de termos cadastrados. Recomenda-se (1) ampliar as paráfrases e sinônimos validados com consultas reais; (2) realizar testes com perguntas inéditas e usuários externos; (3) atualizar periodicamente a base documental. Os limites da avaliação e os tempos individuais estão em `docs/resultados_testes.md`.
 
 ---
 
@@ -168,8 +170,8 @@ Em todas as respostas, valem as mesmas regras:
 **Interface em linha de comando (caminho principal):**
 
 ```bash
-git clone [link do repositório]
-cd [pasta do projeto]
+git clone https://github.com/lisjdearaujo/1CCOA-GLOBAL-SOLUTION-2.git
+cd 1CCOA-GLOBAL-SOLUTION-2
 python src/sistema.py
 ```
 
@@ -194,23 +196,23 @@ A interface web usa a mesma lógica do CLI. Se ela não funcionar, a avaliação
 
 | Entrada | Resposta do sistema | Fonte |
 |---|---|---|
-| "golpe do pix" | Orientação G01: bancos não pedem Pix para proteger ou cancelar a conta. | Banco Central do Brasil |
+| "golpe do pix" | Orientação G01: interromper contato suspeito e, se houve perda, contestar no banco pelo MED. | Banco Central do Brasil |
 | "como criar uma senha forte" | Orientação C02: senhas longas e diferentes para cada serviço. | Cartilha CERT.br |
-| "o que é a LGPD" | Orientação P01: direitos do titular de dados. | Lei 13.709/2018 e ANPD |
+| "o que é a LGPD" | Orientação P01: direitos do titular de dados com os limites legais. | ANPD |
 | Entrada vazia | "Entrada vazia. Digite uma pergunta ou escolha um tema pelo menu." | — |
 | Opção de menu "9" | "Opção inexistente. Escolha um número do menu." | — |
 | "qual a previsão do tempo" | "Não encontrei uma orientação confiável para essa pergunta nesta base..." | — |
-| "conta" | Mostra as opções G01 e C04 para o usuário escolher. | — |
+| "conta" | Mostra as orientações empatadas para o usuário escolher, com fonte após a escolha. | Conforme a opção selecionada |
 
 ---
 
 ## ⚠️ Cuidados com clareza, acessibilidade, privacidade e informação não oficial
 
-- **Não coleta dados pessoais.** O programa não pede nome, CPF, e-mail ou senha. A triagem pergunta apenas sim ou não sobre a mensagem.
+- **Não solicita nem armazena dados pessoais.** O programa não pede nome, CPF, e-mail ou senha. O campo de pergunta é livre, por isso recomendamos não inserir informações pessoais nele. A triagem pergunta apenas sim ou não sobre sinais da mensagem.
 - **Não é canal oficial.** Toda resposta lembra que o assistente não representa órgão público.
 - **Fontes à vista.** Cada orientação mostra a referência consultada e a data de verificação.
 - **Linguagem simples.** As orientações evitam termos técnicos sem explicação.
-- **Acessibilidade.** A interface é texto puro, com menus numerados, o que funciona com leitores de tela e em qualquer terminal. A versão web também usa textos e rótulos claros.
+- **Acessibilidade.** A CLI usa textos e menus numerados, que podem facilitar o uso em leitores de tela compatíveis com o terminal. A web utiliza rótulos textuais. Ainda faltam testes formais de acessibilidade.
 - **Informação pode mudar.** Regras de bancos, leis e serviços mudam. Sempre confirme nos canais oficiais.
 
 ---
@@ -239,9 +241,9 @@ A interface web usa a mesma lógica do CLI. Se ela não funcionar, a avaliação
 
 ## 🏁 Conclusões, limitações e possibilidades de melhoria
 
-O CyberCidadão Assist cumpre os requisitos de base, busca, navegação entre temas, tratamento de entradas inválidas, avisos de limitação, lógica booleana, testes automatizados e teste de facilidade de uso. Ele também evita afirmar com certeza que uma mensagem é golpe e não se apresenta como canal oficial.
+O CyberCidadão Assist implementa base, busca, navegação entre temas, tratamento de entradas inválidas, avisos de limitação, lógica booleana e testes automatizados. O teste com participante externo está roteirizado e depende da execução e registro pela equipe. Ele também evita afirmar com certeza que uma mensagem é golpe e não se apresenta como canal oficial.
 
-**Limitações:** a busca depende das palavras da pergunta e tem falsos positivos com palavras genéricas (T13). A base tem 17 registros e ainda precisa de conferência das datas de verificação. O teste de uso envolveu poucas pessoas. As melhorias listadas na seção de testes tratam esses pontos.
+**Limitações:** a busca depende de palavras cadastradas e pode produzir falsas correspondências em novas consultas, mesmo com T13 corrigido. A base contém 17 registros documentados em 19/11/2026 e exigirá revisão periódica. A avaliação com participante externo ainda precisa ser realizada e documentada. As melhorias estão na seção de testes.
 
 ---
 

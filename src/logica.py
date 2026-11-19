@@ -1,29 +1,28 @@
-"""Lógica do CyberCidadão Assist.
+"""Regras e consultas do CyberCidadão Assist (sem IA nem bibliotecas externas).
 
-Este módulo não usa input() nem print(). Ele é usado pela interface CLI
-(sistema.py), pela interface web opcional (app.py) e pelos testes (testes.py).
+Este módulo é compartilhado pelo terminal, pela interface web e pelos testes.
 """
 import json
 import os
+import re
 import unicodedata
+from datetime import date
 
 CAMINHO_BASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "base.json")
-
 CAMPOS_OBRIGATORIOS = ("id", "tema", "palavras_chave", "orientacao", "referencia", "data_verificacao")
-
 STOPWORDS = {
     "a", "o", "as", "os", "um", "uma", "de", "do", "da", "dos", "das", "e", "em", "no", "na",
-    "para", "por", "com", "que", "se", "meu", "minha", "eu", "ao", "posso", "como", "ou",
+    "para", "por", "com", "que", "se", "meu", "minha", "meus", "minhas", "eu", "ao", "posso",
+    "como", "ou", "pelo", "pela", "pelos", "pelas", "pra", "quero", "qual", "quem", "onde",
 }
 
-# Grafo simples de temas: cada tema aponta para temas relacionados.
+# Relações explícitas entre assuntos: sugestões de continuidade, não respostas automáticas.
 GRAFO_TEMAS = {
     "golpes": ["contas_senhas", "privacidade"],
     "privacidade": ["golpes", "servicos_documentos"],
     "contas_senhas": ["golpes", "servicos_documentos"],
     "servicos_documentos": ["privacidade", "contas_senhas"],
 }
-
 NOMES_TEMAS = {
     "golpes": "Golpes e fraudes",
     "privacidade": "Privacidade e LGPD",
@@ -33,117 +32,149 @@ NOMES_TEMAS = {
 
 
 class ErroBase(Exception):
-    """Erro ao carregar ou validar a base de conhecimento."""
+    """Erro legível ao carregar/validar os registros JSON."""
 
 
 def normalizar(texto):
-    """Minúsculas, sem acentos e sem pontuação."""
-    texto = unicodedata.normalize("NFD", str(texto).lower())
+    """Converte para minúsculas, remove acentos e unifica algumas grafias."""
+    if not isinstance(texto, str):
+        return ""
+    texto = unicodedata.normalize("NFD", texto.lower())
     texto = "".join(c for c in texto if unicodedata.category(c) != "Mn")
-    limpo = "".join(c if c.isalnum() else " " for c in texto)
-    return " ".join(limpo.split())
+    texto = "".join(c if c.isalnum() else " " for c in texto)
+    texto = re.sub(r"\bwi\s+fi\b", "wifi", texto)
+    texto = re.sub(r"\be\s+mail\b", "email", texto)
+    return " ".join(texto.split())
 
 
 def tokens(texto):
-    """Palavras relevantes, sem stopwords e com ao menos 3 letras."""
-    return {t for t in normalizar(texto).split() if t not in STOPWORDS and len(t) >= 3}
+    return {t for t in normalizar(texto).split() if len(t) >= 3 and t not in STOPWORDS}
 
 
 def validar_registro(registro, indice):
-    """Retorna uma lista de erros do registro (vazia se estiver correto)."""
-    erros = []
+    """Valida os tipos e o conteúdo essencial, sem gerar exceções em dados malformados."""
     if not isinstance(registro, dict):
-        return [f"registro {indice} não é um objeto"]
+        return [f"registro {indice} deve ser um objeto JSON"]
+    erros = []
     for campo in CAMPOS_OBRIGATORIOS:
-        if campo not in registro or registro[campo] in ("", None, []):
-            erros.append(f"registro {indice}: campo '{campo}' ausente ou vazio")
-    if "palavras_chave" in registro and not isinstance(registro["palavras_chave"], list):
-        erros.append(f"registro {indice}: 'palavras_chave' deve ser uma lista")
-    if registro.get("tema") and registro["tema"] not in NOMES_TEMAS:
-        erros.append(f"registro {indice}: tema '{registro['tema']}' desconhecido")
+        if campo not in registro:
+            erros.append(f"registro {indice}: campo '{campo}' ausente")
+
+    for campo in ("id", "tema", "orientacao", "referencia", "data_verificacao"):
+        if campo in registro and (not isinstance(registro[campo], str) or not registro[campo].strip()):
+            erros.append(f"registro {indice}: '{campo}' deve ser um texto não vazio")
+
+    palavras = registro.get("palavras_chave")
+    if palavras is not None and (
+        not isinstance(palavras, list) or not palavras
+        or any(not isinstance(p, str) or not p.strip() for p in palavras)
+    ):
+        erros.append(f"registro {indice}: 'palavras_chave' deve ser lista de textos não vazios")
+
+    tema = registro.get("tema")
+    if isinstance(tema, str) and tema not in NOMES_TEMAS:
+        erros.append(f"registro {indice}: tema '{tema}' desconhecido")
+
+    data_verificacao = registro.get("data_verificacao")
+    if isinstance(data_verificacao, str) and data_verificacao.strip() and data_verificacao != "PENDENTE":
+        try:
+            data = date.fromisoformat(data_verificacao)
+            if data.isoformat() != data_verificacao:
+                raise ValueError("formato diferente de AAAA-MM-DD")
+        except ValueError:
+            erros.append(f"registro {indice}: 'data_verificacao' deve ser AAAA-MM-DD ou PENDENTE")
     return erros
 
 
 def carregar_base(caminho=CAMINHO_BASE):
-    """Lê e valida a base. Levanta ErroBase se o arquivo estiver ausente, vazio ou inconsistente."""
-    if not os.path.exists(caminho):
-        raise ErroBase(f"arquivo da base não encontrado: {caminho}")
+    """Carrega o arquivo ou informa erro recuperável (inclusive arquivo ausente/vazio)."""
     try:
-        with open(caminho, encoding="utf-8") as arquivo:
+        with open(caminho, "r", encoding="utf-8") as arquivo:
             conteudo = json.load(arquivo)
-    except json.JSONDecodeError as erro:
-        raise ErroBase(f"base com JSON inválido: {erro}")
+    except OSError as erro:
+        raise ErroBase(f"não foi possível abrir a base '{caminho}': {erro}") from erro
+    except (UnicodeError, json.JSONDecodeError) as erro:
+        raise ErroBase(f"arquivo de base inválido ou vazio: {erro}") from erro
+
     if not isinstance(conteudo, dict) or not isinstance(conteudo.get("registros"), list):
-        raise ErroBase("a base deve ser um objeto com a lista 'registros'")
+        raise ErroBase("o JSON deve conter um objeto com a lista 'registros'")
     registros = conteudo["registros"]
     if not registros:
-        raise ErroBase("a base está vazia")
-
+        raise ErroBase("a lista de registros da base está vazia")
     erros = []
-    for i, registro in enumerate(registros):
+    for i, registro in enumerate(registros, start=1):
         erros.extend(validar_registro(registro, i))
-    ids = [r.get("id") for r in registros if isinstance(r, dict)]
+    ids = [r["id"] for r in registros if isinstance(r, dict) and isinstance(r.get("id"), str)]
     if len(ids) != len(set(ids)):
-        erros.append("há ids repetidos na base")
+        erros.append("existem identificadores repetidos na base")
     if erros:
         raise ErroBase("; ".join(erros))
     return registros
 
 
 def temas_disponiveis(registros):
-    """Temas presentes na base, na ordem definida em NOMES_TEMAS."""
     presentes = {r["tema"] for r in registros}
-    return [t for t in NOMES_TEMAS if t in presentes]
+    return [tema for tema in NOMES_TEMAS if tema in presentes]
+
+
+def registros_do_tema(registros, tema):
+    return [r for r in registros if r["tema"] == tema]
 
 
 def temas_relacionados(tema):
-    """Vizinhos do tema no grafo, usados para sugerir continuidade."""
     return GRAFO_TEMAS.get(tema, [])
 
 
+def titulo_registro(registro):
+    """Rótulo curto para navegação sem duplicar uma fonte de dados."""
+    return registro["palavras_chave"][0].replace("_", " ").capitalize()
+
+
 def pontuar(pergunta, registro):
-    """Pontuação: 2 por expressão de palavra-chave encontrada na pergunta, 1 por palavra em comum."""
-    consulta = " " + normalizar(pergunta) + " "
+    """Expressão inteira: +2 por palavra relevante; sobreposição: +1 por palavra.
+
+    As expressões longas são mais informativas do que uma palavra genérica isolada.
+    A pontuação não significa grau de certeza e só é usada para selecionar opções.
+    """
+    consulta = f" {normalizar(pergunta)} "
+    presentes = tokens(pergunta)
+    chave_tokens = set()
     pontos = 0
-    tokens_chave = set()
     for expressao in registro["palavras_chave"]:
         expr = normalizar(expressao)
-        tokens_chave |= tokens(expr)
+        chave_tokens.update(tokens(expr))
         if expr and f" {expr} " in consulta:
-            pontos += 2
-    pontos += len(tokens(pergunta) & tokens_chave)
-    return pontos
+            pontos += 2 * max(1, len(tokens(expr)))
+    return pontos + len(presentes & chave_tokens)
 
 
 def buscar(pergunta, registros, tema=None):
-    """Busca a orientação mais próxima.
+    """Busca literal baseada em pontuação; retorna vazio/sem_resposta/ambiguo/ok.
 
-    Retorna um dicionário com:
-      status: "vazio", "ok", "ambiguo" ou "sem_resposta"
-      candidatos: registros empatados na melhor pontuação
-      pontuacao: a melhor pontuação encontrada
+    Pontua apenas o assunto escolhido, quando especificado. Em empate, não decide
+    arbitrariamente: o usuário precisa selecionar entre as orientações encontradas.
     """
-    if not pergunta or not normalizar(pergunta):
+    if not normalizar(pergunta):
         return {"status": "vazio", "candidatos": [], "pontuacao": 0}
-
-    universo = [r for r in registros if tema is None or r["tema"] == tema]
-    pontuados = [(pontuar(pergunta, r), r) for r in universo]
+    universo = registros if tema is None else registros_do_tema(registros, tema)
+    pontuados = [(pontuar(pergunta, registro), registro) for registro in universo]
     melhor = max((p for p, _ in pontuados), default=0)
-    if melhor == 0:
-        return {"status": "sem_resposta", "candidatos": [], "pontuacao": 0}
-
-    candidatos = [r for p, r in pontuados if p == melhor]
-    status = "ok" if len(candidatos) == 1 else "ambiguo"
-    return {"status": status, "candidatos": candidatos, "pontuacao": melhor}
+    # Uma única palavra casual em uma pergunta longa não é evidência suficiente.
+    if melhor == 0 or (len(tokens(pergunta)) >= 3 and melhor <= 1):
+        return {"status": "sem_resposta", "candidatos": [], "pontuacao": melhor}
+    candidatos = [registro for pontos, registro in pontuados if pontos == melhor]
+    return {
+        "status": "ok" if len(candidatos) == 1 else "ambiguo",
+        "candidatos": candidatos,
+        "pontuacao": melhor,
+    }
 
 
 def formatar_resposta(registro, modelo="A"):
-    """Modelos de instrução de resposta documentados em docs/prompts.md.
-
-    Modelo A: completo, com papel, formato, fonte obrigatória e aviso.
-    Modelo B: enxuto, com orientação, fonte e aviso curto.
-    """
-    tema = NOMES_TEMAS.get(registro["tema"], registro["tema"])
+    """Dois modelos determinísticos documentados em docs/prompts.md."""
+    if modelo not in {"A", "B"}:
+        raise ValueError("modelo deve ser A ou B")
+    tema = NOMES_TEMAS[registro["tema"]]
     if modelo == "B":
         return (
             f"{registro['orientacao']}\n"
@@ -161,29 +192,15 @@ def formatar_resposta(registro, modelo="A"):
 
 
 def mensagem_sem_resposta():
-    """Aviso de limitação com alternativas de consulta."""
-    sugestao = ", ".join(NOMES_TEMAS.values())
     return (
         "Não encontrei uma orientação confiável para essa pergunta nesta base. "
-        f"Tente reformular a pergunta ou escolher um tema: {sugestao}."
+        "Tente reformular ou escolha um tema: " + ", ".join(NOMES_TEMAS.values()) + "."
     )
 
 
-# ----- Triagem de mensagens suspeitas (fase 6: lógica booleana) -----
-#
-# Variáveis:
-#   P = pede dados pessoais ou senhas
-#   U = cria urgência ou ameaça
-#   L = contém link
-#   R = remetente desconhecido
-#
-# Expressão de alerta: alerta = P · U · (L + R)
-# Forma implementada, obtida por De Morgan:
-#   sem_alerta = ¬P + ¬U + (¬L · ¬R)
-#   alerta = ¬sem_alerta
-# A função triagem() usa a forma simplificada, e tabela_verdade() mostra
-# que ela coincide com a expressão original nas 16 combinações possíveis.
-
+# Lógica booleana: P = dados; U = urgência; L = link; R = remetente desconhecido.
+# Original: P · U · (L + R). Complemento, por De Morgan:
+# sem_alerta = ¬P + ¬U + (¬L · ¬R); alerta = ¬sem_alerta.
 def _alerta_expressao_original(p, u, l, r):
     return bool(p and u and (l or r))
 
@@ -194,11 +211,11 @@ def _alerta_forma_simplificada(p, u, l, r):
 
 
 def triagem(pede_dados, cria_urgencia, tem_link, remetente_desconhecido):
-    """Indica sinais de alerta. Nunca afirma que a mensagem é golpe."""
+    """Identifica sinais e uma combinação definida, sem diagnosticar golpes."""
     alerta = _alerta_forma_simplificada(pede_dados, cria_urgencia, tem_link, remetente_desconhecido)
     sinais = []
     if pede_dados:
-        sinais.append("pede dados pessoais ou senhas")
+        sinais.append("pede dados pessoais, senhas ou códigos")
     if cria_urgencia:
         sinais.append("cria urgência ou ameaça")
     if tem_link:
@@ -208,8 +225,23 @@ def triagem(pede_dados, cria_urgencia, tem_link, remetente_desconhecido):
     return {"alerta": alerta, "sinais": sinais}
 
 
+def mensagem_triagem(resultado):
+    """Mesmo sinais isolados exigem cautela; ausência de regra não é garantia."""
+    if resultado["sinais"]:
+        texto = "Sinais observados: " + ", ".join(resultado["sinais"]) + ".\n"
+    else:
+        texto = "Nenhum dos quatro sinais informados foi observado.\n"
+    if resultado["alerta"]:
+        texto += "A combinação definida no protótipo indica atenção reforçada. "
+    else:
+        texto += "A combinação de alerta definida no protótipo não foi atingida. "
+    return texto + (
+        "Isso não confirma que seja um golpe nem garante segurança. "
+        "Não forneça senhas ou códigos; confirme a solicitação pelo canal oficial da instituição."
+    )
+
+
 def tabela_verdade():
-    """Lista das 16 linhas, com a expressão original e a simplificada."""
     linhas = []
     for p in (False, True):
         for u in (False, True):

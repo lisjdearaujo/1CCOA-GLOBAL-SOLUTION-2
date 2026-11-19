@@ -1,141 +1,258 @@
 {
-  "descricao": "Base de orientações de segurança digital. Cada registro deve ser conferido na referência indicada antes da entrega. O campo data_verificacao está como PENDENTE até a equipe conferir a fonte e registrar a data real.",
+  "descricao": "Base de orientações conferidas em páginas institucionais em 2026-11-19. O sistema não consulta a internet em tempo real; confirme atualizações na fonte oficial.",
   "registros": [
     {
       "id": "G01",
       "tema": "golpes",
-      "palavras_chave": ["golpe do pix", "pix", "cancelar pix", "transferencia", "conta bloqueada pix"],
-      "orientacao": "Bancos não pedem Pix ou transferência para proteger, cancelar ou desbloquear sua conta. Desligue, e entre em contato pelo número no verso do cartão ou pelo aplicativo oficial.",
-      "referencia": "Banco Central do Brasil, orientações sobre golpes (https://www.bcb.gov.br)",
-      "data_verificacao": "PENDENTE"
+      "palavras_chave": [
+        "golpe do pix",
+        "pix",
+        "cai em golpe pix",
+        "me roubaram pelo pix",
+        "transferencia fraudulenta",
+        "golpe transferencia",
+        "conta bloqueada pix",
+        "med pix"
+      ],
+      "orientacao": "Se alguém pedir um Pix para proteger ou desbloquear sua conta, interrompa o contato e confirme pelo canal oficial do banco. Se já enviou um Pix após um golpe, contate seu banco imediatamente para contestar a operação pelo Mecanismo Especial de Devolução (MED). A recuperação do valor não é garantida.",
+      "referencia": "Banco Central, orientação a vítimas de golpe por Pix (https://www.bcb.gov.br/meubc/faqs/p/vitima-fez-um-pix-e-caiu-em-um-golpe)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "G02",
       "tema": "golpes",
-      "palavras_chave": ["falsa central", "ligacao do banco", "atendente", "codigo de seguranca", "token"],
+      "palavras_chave": [
+        "falsa central",
+        "ligacao do banco",
+        "atendente",
+        "codigo de seguranca",
+        "token",
+        "banco pedindo codigo",
+        "banco pedindo token"
+      ],
       "orientacao": "Não informe senhas, tokens ou códigos recebidos por SMS durante ligações. Encerre a chamada e contate a instituição pelo canal oficial.",
-      "referencia": "Cartilha de Segurança para Internet, CERT.br (https://cartilha.cert.br)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "CERT.br, Dicas Rápidas da Cartilha de Segurança para Internet (https://cartilha.cert.br/dicas-rapidas/)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "G03",
       "tema": "golpes",
-      "palavras_chave": ["phishing", "email falso", "link suspeito", "site falso", "mensagem suspeita"],
+      "palavras_chave": [
+        "phishing",
+        "email falso",
+        "link suspeito",
+        "site falso",
+        "mensagem suspeita",
+        "email estranho",
+        "link de email",
+        "recebi link"
+      ],
       "orientacao": "Antes de clicar em um link recebido por e-mail ou SMS, confira o remetente e o endereço. Em caso de dúvida, digite o endereço do site diretamente no navegador.",
-      "referencia": "Cartilha de Segurança para Internet, CERT.br (https://cartilha.cert.br)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "CERT.br, Dicas Rápidas da Cartilha de Segurança para Internet (https://cartilha.cert.br/dicas-rapidas/)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "G04",
       "tema": "golpes",
-      "palavras_chave": ["boleto", "boleto falso", "codigo de barras", "fatura", "vencimento"],
+      "palavras_chave": [
+        "boleto",
+        "boleto falso",
+        "codigo de barras",
+        "fatura",
+        "vencimento"
+      ],
       "orientacao": "Confira o nome do beneficiário e o valor antes de pagar. Se o boleto chegou por terceiros sem origem confirmada, verifique com a empresa pelo canal oficial.",
-      "referencia": "Procon (https://www.procon.sp.gov.br) e Cartilha de Segurança para Internet, CERT.br (https://cartilha.cert.br)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "Procon-SP, cartilha Direitos Básicos do Consumidor, p. 19 (https://www.procon.sp.gov.br/wp-content/uploads/2025/07/Cartilha-Direitos-basicos-do-consumidor-para-refugiados-e-imigrantes-Portugues2.pdf)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "G05",
       "tema": "golpes",
-      "palavras_chave": ["premio", "sorteio", "ganhou", "taxa para liberar", "golpe"],
+      "palavras_chave": [
+        "premio",
+        "sorteio",
+        "ganhar premio",
+        "taxa para liberar",
+        "golpe de premio",
+        "premio falso"
+      ],
       "orientacao": "Prêmio que exige pagamento antecipado para liberação é um sinal comum de golpe. Não pague taxa para receber prêmio ou sorteio.",
-      "referencia": "Cartilha de Segurança para Internet, CERT.br (https://cartilha.cert.br)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "CERT.br, Dicas Rápidas da Cartilha de Segurança para Internet (https://cartilha.cert.br/dicas-rapidas/)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "P01",
       "tema": "privacidade",
-      "palavras_chave": ["lgpd", "direitos", "dados pessoais", "titular de dados", "privacidade"],
-      "orientacao": "A LGPD garante ao titular direitos como confirmar, acessar, corrigir, anonimizar e excluir dados pessoais tratados por empresas e órgãos públicos.",
-      "referencia": "Lei nº 13.709/2018 (LGPD), Planalto (https://www.planalto.gov.br) e ANPD (https://www.gov.br/anpd)",
-      "data_verificacao": "PENDENTE"
+      "palavras_chave": [
+        "lgpd",
+        "direitos",
+        "dados pessoais",
+        "titular de dados",
+        "privacidade"
+      ],
+      "orientacao": "A LGPD prevê direitos como confirmar e acessar dados pessoais, corrigir informações e, nas hipóteses previstas na lei, solicitar anonimização ou eliminação. O exercício desses direitos depende da situação e das bases legais envolvidas.",
+      "referencia": "ANPD, Direito dos Titulares (https://www.gov.br/anpd/pt-br/assuntos/titular-de-dados/direito-dos-titulares)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "P02",
       "tema": "privacidade",
-      "palavras_chave": ["excluir dados", "apagar dados", "exclusao de dados", "remover cadastro", "pedir exclusao"],
-      "orientacao": "Para pedir a exclusão de dados, procure o canal de privacidade da empresa ou o encarregado pelo tratamento de dados. Guarde o número do protocolo. Sem resposta, a ANPD recebe reclamações.",
-      "referencia": "ANPD, direitos dos titulares (https://www.gov.br/anpd)",
-      "data_verificacao": "PENDENTE"
+      "palavras_chave": [
+        "excluir dados",
+        "apagar dados",
+        "exclusao de dados",
+        "remover cadastro",
+        "pedir exclusao",
+        "excluir meus dados",
+        "excluir meus dados pessoais",
+        "quero remover meus dados",
+        "apagar meus dados"
+      ],
+      "orientacao": "Para solicitar exclusão de dados, procure o canal de privacidade da organização e guarde o protocolo. O direito à eliminação depende das hipóteses previstas na LGPD e pode ter exceções legais. Se não houver atendimento adequado, consulte a ANPD sobre como apresentar uma petição de titular.",
+      "referencia": "ANPD, Direito dos Titulares (https://www.gov.br/anpd/pt-br/assuntos/titular-de-dados/direito-dos-titulares)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "P03",
       "tema": "privacidade",
-      "palavras_chave": ["vazamento", "dados vazados", "vazou", "meus dados vazaram"],
+      "palavras_chave": [
+        "vazamento",
+        "dados vazados",
+        "vazou",
+        "meus dados vazaram"
+      ],
       "orientacao": "Se seus dados vazaram, troque as senhas das contas afetadas, ative a verificação em duas etapas e acompanhe movimentações estranhas. Verifique se a empresa comunicou o incidente.",
-      "referencia": "ANPD, comunicação de incidentes de segurança (https://www.gov.br/anpd)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "ANPD, Meus dados vazaram, e agora? (https://www.gov.br/anpd/pt-br/canais_atendimento/assuntos/noticias/meus-dados-vazaram-e-agora) e CERT.br, Dicas Rápidas da Cartilha de Segurança para Internet (https://cartilha.cert.br/dicas-rapidas/)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "P04",
       "tema": "privacidade",
-      "palavras_chave": ["cpf", "rg", "pedido de documento", "compartilhar dados", "dados desnecessarios"],
+      "palavras_chave": [
+        "cpf",
+        "rg",
+        "pedido de documento",
+        "compartilhar dados",
+        "dados desnecessarios"
+      ],
       "orientacao": "Forneça apenas os dados necessários para o serviço que você procurou. Desconfie de pedidos de CPF ou documentos fora de um atendimento que você iniciou.",
-      "referencia": "ANPD, princípio da necessidade previsto na LGPD (https://www.gov.br/anpd)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "ANPD, Glossário: princípio da necessidade (https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/glossario-anpd/p)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "C01",
       "tema": "contas_senhas",
-      "palavras_chave": ["dois fatores", "2fa", "autenticacao", "verificacao em duas etapas"],
+      "palavras_chave": [
+        "dois fatores",
+        "2fa",
+        "autenticacao",
+        "verificacao em duas etapas"
+      ],
       "orientacao": "A autenticação em dois fatores pede uma confirmação além da senha. Ative nas configurações de segurança do aplicativo ou site do serviço.",
-      "referencia": "Cartilha de Segurança para Internet, CERT.br (https://cartilha.cert.br)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "CERT.br, Dicas Rápidas da Cartilha de Segurança para Internet (https://cartilha.cert.br/dicas-rapidas/)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "C02",
       "tema": "contas_senhas",
-      "palavras_chave": ["senha forte", "criar senha", "senha fraca", "senha segura"],
+      "palavras_chave": [
+        "senha forte",
+        "criar senha",
+        "senha fraca",
+        "senha segura"
+      ],
       "orientacao": "Use senhas longas e diferentes para cada serviço. Frases longas são uma boa opção. Não reutilize a senha do e-mail em outros sites.",
-      "referencia": "Cartilha de Segurança para Internet, CERT.br (https://cartilha.cert.br)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "CERT.br, Dicas Rápidas da Cartilha de Segurança para Internet (https://cartilha.cert.br/dicas-rapidas/)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "C03",
       "tema": "contas_senhas",
-      "palavras_chave": ["gerenciador de senhas", "cofre de senhas", "guardar senhas", "anotar senhas"],
+      "palavras_chave": [
+        "gerenciador de senhas",
+        "cofre de senhas",
+        "guardar senhas",
+        "anotar senhas"
+      ],
       "orientacao": "Um gerenciador de senhas guarda as senhas de forma cifrada e pode gerar senhas fortes. Proteja-o com uma senha mestra forte e com verificação em duas etapas.",
-      "referencia": "Cartilha de Segurança para Internet, CERT.br (https://cartilha.cert.br)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "CERT.br, Cartilha: autenticação (https://cartilha.cert.br/fasciculos/) e NIC.br, orientações sobre autenticação (https://nic.br/noticia/releases/cert-br-explica-como-usar-a-autenticacao-e-proteger-o-acesso-as-suas-contas/)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "C04",
       "tema": "contas_senhas",
-      "palavras_chave": ["conta invadida", "hackearam", "recuperar conta", "perdi acesso", "invasao"],
+      "palavras_chave": [
+        "conta invadida",
+        "hackearam",
+        "recuperar conta",
+        "perdi acesso",
+        "invasao"
+      ],
       "orientacao": "Use a recuperação oficial do serviço, troque a senha, encerre sessões em outros aparelhos e avise seus contatos sobre mensagens suspeitas enviadas em seu nome.",
-      "referencia": "Cartilha de Segurança para Internet, CERT.br (https://cartilha.cert.br)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "CERT.br, Dicas Rápidas da Cartilha de Segurança para Internet (https://cartilha.cert.br/dicas-rapidas/)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "S01",
       "tema": "servicos_documentos",
-      "palavras_chave": ["site oficial", "gov.br", "site do governo", "verificar site", "endereco do site"],
-      "orientacao": "Serviços públicos federais ficam no portal gov.br. Digite o endereço ou use o link oficial do órgão. Desconfie de sites com erros de grafia ou que cobram taxas inesperadas.",
-      "referencia": "Portal gov.br (https://www.gov.br)",
-      "data_verificacao": "PENDENTE"
+      "palavras_chave": [
+        "site oficial",
+        "gov.br",
+        "site do governo",
+        "verificar site",
+        "endereco do site"
+      ],
+      "orientacao": "O portal gov.br reúne serviços e informações do Governo Federal. Para conferir um serviço, entre pelo portal ou pelo site oficial do órgão e examine o domínio e o destino dos links. Desconfie de endereços parecidos e cobranças inesperadas.",
+      "referencia": "Governo Digital, Domínios gov.br (https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/sisp/guia-do-gestor/guia-orientativo-de-padroes-e-fluxos-das-tecnologias-de-transformacao-digital/dominios-gov.br)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "S02",
       "tema": "servicos_documentos",
-      "palavras_chave": ["foto de documento", "enviar documento", "rg", "cnh", "enviar foto"],
+      "palavras_chave": [
+        "foto de documento",
+        "enviar documento",
+        "rg",
+        "cnh",
+        "enviar foto"
+      ],
       "orientacao": "Envie fotos de documentos apenas para serviços que você procurou e por canais oficiais. Evite enviar a desconhecidos. Quando o serviço permitir, oculte dados não necessários.",
-      "referencia": "ANPD, princípio da necessidade previsto na LGPD (https://www.gov.br/anpd)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "ANPD, Glossário: princípio da necessidade (https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/glossario-anpd/p)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "S03",
       "tema": "servicos_documentos",
-      "palavras_chave": ["wifi publico", "rede publica", "wi-fi aberto", "rede aberta", "conectar wifi"],
+      "palavras_chave": [
+        "wifi publico",
+        "rede publica",
+        "wi-fi aberto",
+        "rede aberta",
+        "conectar wifi",
+        "wifi de restaurante",
+        "wifi de cafe",
+        "wifi do restaurante",
+        "wifi aberto para banco",
+        "acessar banco usando wifi",
+        "wifi no shopping"
+      ],
       "orientacao": "Evite acessar o banco ou enviar documentos em redes Wi-Fi públicas. Prefira os dados móveis ou uma rede de confiança.",
-      "referencia": "Cartilha de Segurança para Internet, CERT.br (https://cartilha.cert.br)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "CERT.br, Dicas Rápidas da Cartilha de Segurança para Internet (https://cartilha.cert.br/dicas-rapidas/)",
+      "data_verificacao": "2026-11-19"
     },
     {
       "id": "S04",
       "tema": "servicos_documentos",
-      "palavras_chave": ["atualizar", "atualizacao", "aplicativo desatualizado", "sistema desatualizado", "celular desatualizado"],
+      "palavras_chave": [
+        "atualizar",
+        "atualizacao",
+        "aplicativo desatualizado",
+        "sistema desatualizado",
+        "celular desatualizado"
+      ],
       "orientacao": "Mantenha o sistema operacional e os aplicativos atualizados. As atualizações corrigem falhas de segurança conhecidas.",
-      "referencia": "Cartilha de Segurança para Internet, CERT.br (https://cartilha.cert.br)",
-      "data_verificacao": "PENDENTE"
+      "referencia": "CERT.br, Dicas Rápidas da Cartilha de Segurança para Internet (https://cartilha.cert.br/dicas-rapidas/)",
+      "data_verificacao": "2026-11-19"
     }
   ]
 }
