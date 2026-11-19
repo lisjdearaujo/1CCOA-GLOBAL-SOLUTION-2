@@ -121,6 +121,11 @@ def registros_do_tema(registros, tema):
     return [r for r in registros if r["tema"] == tema]
 
 
+def indice_por_id(registros):
+    """Dicionário para recuperar uma orientação pelo identificador em tempo constante."""
+    return {registro["id"].upper(): registro for registro in registros}
+
+
 def temas_relacionados(tema):
     return GRAFO_TEMAS.get(tema, [])
 
@@ -157,6 +162,11 @@ def buscar(pergunta, registros, tema=None):
     if not normalizar(pergunta):
         return {"status": "vazio", "candidatos": [], "pontuacao": 0}
     universo = registros if tema is None else registros_do_tema(registros, tema)
+    # Consulta direta por identificador (por exemplo "G01"), usando um dicionário id -> registro.
+    por_id = indice_por_id(universo)
+    identificador = normalizar(pergunta).upper()
+    if identificador in por_id:
+        return {"status": "ok", "candidatos": [por_id[identificador]], "pontuacao": None}
     pontuados = [(pontuar(pergunta, registro), registro) for registro in universo]
     melhor = max((p for p, _ in pontuados), default=0)
     # Uma única palavra casual em uma pergunta longa não é evidência suficiente.

@@ -59,7 +59,7 @@ Cidadãos encontram com frequência informações dispersas, termos técnicos e 
 │   ├── teste_usabilidade.md Roteiro e resultados do teste de facilidade de uso
 │   ├── uso_ia.md            Uso de IA e validação crítica
 │   ├── link_video.txt       Link do vídeo no YouTube
-│   └── relatorio.pdf        Relatório final (4 a 8 páginas)
+│   └── relatorio.pdf        Relatório final do projeto
 ├── src/
 │   ├── logica.py            Lógica: validação, busca, grafo de temas, respostas e triagem
 │   ├── sistema.py           Interface em linha de comando (CLI), comando principal
@@ -87,22 +87,37 @@ A base fica em `data/base.json`. Cada registro tem obrigatoriamente os campos:
 
 **Como acrescentar ou corrigir registros:** basta editar `data/base.json`. Não é preciso mexer nas regras de pontuação. Um novo tema exige incluí-lo em `NOMES_TEMAS` e em `GRAFO_TEMAS`. As referências consultadas estão também em `docs/fontes_conferidas.md` (conferidas em 19/11/2026).
 
+**Fontes consultadas:**
+
+| Instituição | O que fundamenta | Registros |
+|---|---|---|
+| Banco Central do Brasil | Golpe do Pix e Mecanismo Especial de Devolução (MED) | G01 |
+| CERT.br / NIC.br (Cartilha de Segurança para Internet) | Golpes por ligação, links, prêmios, senhas, dois fatores, Wi-Fi público e atualizações | G02, G03, G05, P03, C01 a C04, S03, S04 |
+| Procon-SP | Conferência de boletos | G04 |
+| ANPD (Autoridade Nacional de Proteção de Dados) | Direitos do titular, exclusão de dados, vazamentos e princípio da necessidade | P01 a P04, S02 |
+| Governo Digital (gov.br) | Conferência de sites governamentais | S01 |
+
+Os endereços completos de cada página estão em `docs/fontes_conferidas.md` e no campo `referencia` de cada registro.
+
 **Estruturas utilizadas:**
 
-- **Listas e dicionários** para guardar os registros, as palavras-chave e os resultados dos testes.
+- **Listas e dicionários** para guardar os registros, as palavras-chave e os resultados dos testes. A função `indice_por_id()` monta um dicionário `id → registro`, que permite recuperar uma orientação diretamente pelo identificador (por exemplo, digitar `G01`).
+- **Hierarquia tema → subtema:** cada tema reúne suas orientações, que funcionam como subtemas (por exemplo, *Golpes e fraudes* → *Golpe do Pix*, *Falsa central*, *Boleto*, *Phishing*, *Prêmio*). O menu por tema percorre essa hierarquia em dois níveis.
 - **Grafo simples de temas** (`GRAFO_TEMAS`): cada tema aponta para temas relacionados. Por exemplo, *golpes* se liga a *contas e senhas* e a *privacidade*, porque um golpe costuma envolver senha ou dados pessoais. O grafo é usado para sugerir a continuidade da consulta.
 
 ---
 
 ## 🔎 Estratégia de busca
 
-1. A pergunta é normalizada: letras minúsculas, sem acentos e sem pontuação.
+1. A pergunta é normalizada: letras minúsculas, sem acentos e sem pontuação. Se o texto for exatamente um identificador da base (por exemplo, `S03`), a orientação é recuperada direto pelo dicionário, sem pontuação.
 2. Palavras sem significado (stopwords, como "de", "o", "para") são descartadas.
 3. Cada registro recebe uma pontuação:
    - **+2 por palavra relevante** de uma expressão de palavra-chave encontrada inteira na pergunta (por exemplo, "golpe do pix");
    - **+1** para cada palavra relevante em comum entre a pergunta e as palavras-chave.
 4. O registro de maior pontuação é escolhido. Se a pontuação for zero ou houver apenas uma coincidência fraca numa pergunta longa (3 ou mais palavras relevantes e pontuação de até 1), o sistema informa que não há resposta confiável.
 5. **Empate:** se mais de um registro tiver a mesma pontuação máxima, o sistema mostra as opções e o usuário escolhe. Ele não decide sozinho entre candidatos empatados.
+
+**Comparação das duas formas de recuperação:** a consulta por identificador usa um dicionário e encontra o registro em tempo constante, mas exige que o usuário conheça o código. A busca por pontuação percorre todos os registros e suas palavras-chave (custo proporcional ao tamanho da base), mas aceita frases do dia a dia. Com 17 registros, as duas respondem em cerca de 1 ms; a diferença só seria relevante em bases muito maiores.
 
 As grafias `Wi-Fi`/`wifi` e `e-mail`/`email` são normalizadas da mesma forma. A busca é uma heurística de palavras-chave, não uma análise de intenção ou um modelo de IA.
 
@@ -126,16 +141,28 @@ Em todas as respostas, valem as mesmas regras:
 
 **Triagem de mensagens (lógica booleana):** o usuário responde quatro perguntas sobre a mensagem (pede dados, cria urgência, tem link, remetente desconhecido). Com as variáveis P, U, L e R, o alerta é dado pela expressão **P · U · (L + R)**. A forma implementada usa De Morgan: `sem_alerta = ¬P + ¬U + (¬L · ¬R)`. A função `tabela_verdade()` verifica as 16 combinações e confirma que as duas formas dão o mesmo resultado.
 
+**Mapa de Karnaugh da triagem** (1 = alerta):
+
+| P·U \ L·R | 00 | 01 | 11 | 10 |
+|---|:-:|:-:|:-:|:-:|
+| **00** | 0 | 0 | 0 | 0 |
+| **01** | 0 | 0 | 0 | 0 |
+| **11** | 0 | 1 | 1 | 1 |
+| **10** | 0 | 0 | 0 | 0 |
+
+Os 1s formam dois agrupamentos de duas células na linha P·U = 11: um com R = 1 (P·U·R) e outro com L = 1 (P·U·L). A expressão mínima é **P·U·L + P·U·R = P·U·(L + R)**, a mesma usada no código.
+
 ---
 
 ## 🧪 Plano de testes e resultados
 
-**Plano:** 16 perguntas em `data/testes.json`, organizadas em quatro tipos:
+**Plano:** 17 perguntas em `data/testes.json`, organizadas em cinco tipos:
 
 - 4 perguntas diretas (T01 a T04);
 - 6 reformulações (T05 a T10);
 - 3 perguntas fora da base (T11 a T13);
-- 3 situações-limite (T14 a T16): entrada vazia, ambiguidade e filtro sem correspondência.
+- 3 situações-limite (T14 a T16): entrada vazia, ambiguidade e filtro sem correspondência;
+- 1 consulta por identificador (T17).
 
 O script `python src/testes.py` mede o tempo real de cada consulta, compara status e identificador esperados com os retornados, valida a equivalência da tabela-verdade da triagem e compara os dois modelos de instrução nas perguntas com resposta única. O resultado é gravado em `docs/resultados_testes.md` com **resposta esperada, resposta obtida, classificação e tempo**.
 
@@ -143,13 +170,13 @@ O script `python src/testes.py` mede o tempo real de cada consulta, compara stat
 
 | Indicador | Resultado |
 |---|---|
-| Perguntas avaliadas | 16 |
-| Consultas corretas neste conjunto | 16 |
+| Perguntas avaliadas | 17 |
+| Consultas corretas neste conjunto | 17 |
 | Taxa de acerto observada | **100,0%** |
-| Tempo médio observado | aproximadamente **0,9 ms** (varia conforme o computador) |
+| Tempo médio observado | aproximadamente **0,8 ms** (varia conforme o computador) |
 | Equivalência da triagem | 16 de 16 combinações consistentes |
 | Orientações com fonte e data conferidas | 17 de 17 |
-| Comparação dos modelos | 10 consultas com resposta única: ambos citaram fonte e aviso |
+| Comparação dos modelos | 11 consultas com resposta única: ambos citaram fonte e aviso |
 | Facilidade de uso: tarefas concluídas pelo roteiro | **4 de 4** |
 | Facilidade de uso: média de entradas por tarefa | **1,75** (menor caminho) |
 | Facilidade de uso: variações de frase resolvidas na tarefa 2 | **5 de 6** (83,3%) |
@@ -160,7 +187,7 @@ O script `python src/testes.py` mede o tempo real de cada consulta, compara stat
 - T10, "wifi de restaurante para acessar o banco": foram incluídas expressões compatíveis com Wi-Fi em locais públicos, resultando em S03;
 - T13, "quem ganhou a copa do mundo": a palavra solta "ganhou" foi retirada das palavras-chave de golpes com prêmios e evitou a falsa orientação G05.
 
-A avaliação anterior tinha **13/16 (81,2%)**; os resultados atuais são **16/16 (100,0%)** nas mesmas perguntas. Isso **não garante 100% de precisão** em perguntas desconhecidas: a amostra é pequena e os casos corrigidos pertencem à própria bateria de teste. Novos exemplos devem ser coletados para uma avaliação independente.
+A avaliação anterior tinha **13/16 (81,2%)**; os resultados atuais são **16/16 (100,0%)** nas mesmas perguntas. A pergunta T17 foi incluída depois, para testar a consulta por identificador. Isso **não garante 100% de precisão** em perguntas desconhecidas: a amostra é pequena e os casos corrigidos pertencem à própria bateria de teste. Novos exemplos devem ser coletados para uma avaliação independente.
 
 **Facilidade de uso:** a avaliação foi feita por **roteiro de tarefas**, executado pela equipe com apoio de IA, sem participante externo (detalhes em `docs/teste_usabilidade.md`). As quatro tarefas foram concluídas, com 1,75 entrada em média pelo menor caminho. Cinco de seis frases do dia a dia para a mesma dúvida levaram direto à orientação certa; a sexta ("golpe por ligacao") gerou um empate que incluía uma opção sem relação (prêmio). A principal dificuldade foi o nome de alguns itens do menu por tema, como "Falsa central", que não descreve a situação do cidadão. Como a equipe conhece o sistema, esse resultado tende a ser otimista.
 
@@ -207,6 +234,7 @@ A interface web usa a mesma lógica do CLI. Se ela não funcionar, a avaliação
 | Entrada vazia | "Entrada vazia. Digite uma pergunta ou escolha um tema pelo menu." | — |
 | Opção de menu "9" | "Opção inexistente. Escolha um número do menu." | — |
 | "qual a previsão do tempo" | "Não encontrei uma orientação confiável para essa pergunta nesta base..." | — |
+| "G01" | Orientação G01, recuperada diretamente pelo identificador. | Banco Central do Brasil |
 | "conta" | Mostra as orientações empatadas para o usuário escolher, com fonte após a escolha. | Conforme a opção selecionada |
 
 ---
@@ -222,12 +250,19 @@ A interface web usa a mesma lógica do CLI. Se ela não funcionar, a avaliação
 
 ---
 
+## 🔗 Links do projeto
+
+- **Vídeo de apresentação (YouTube, Não Listado):** [link do vídeo]
+- **Relatório final:** [`docs/relatorio.pdf`](docs/relatorio.pdf)
+
+---
+
 ## 🧠 Decisões técnicas
 
 - **JSON para a base:** é um formato estruturado que o Python lê sem bibliotecas externas, e fica fácil de revisar e corrigir.
 - **Busca por palavras-chave, sem IA:** é rápida, previsível e funciona offline. Um modelo de linguagem poderia lidar melhor com reformulações, mas exigiria chave de API, internet e validação extra, e o enunciado não exige isso.
 - **Separação entre lógica e interface:** a lógica não usa `input()` nem `print()`. Assim, o CLI, a web e os testes usam o mesmo código, e os indicadores não mudam conforme a interface.
-- **Triagem por lógica booleana:** a simplificação por De Morgan mantém o código legível e a equivalência é verificada por tabela-verdade.
+- **Triagem por lógica booleana:** a expressão foi minimizada por mapa de Karnaugh, a forma implementada usa De Morgan e a equivalência é verificada por tabela-verdade.
 
 ---
 

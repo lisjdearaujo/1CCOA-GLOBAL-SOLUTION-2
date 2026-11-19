@@ -1,8 +1,14 @@
 """CyberCidadão Assist: terminal, sem dependências externas.
 
 Execute na raiz do projeto: python src/sistema.py
+
+Este arquivo cuida apenas da conversa com o usuário (menus, input e print).
+Todas as regras (leitura da base, busca, formatação das respostas e triagem)
+ficam em logica.py, que também é usado pela interface web e pelos testes.
 """
 import logica
+
+# Aviso exibido ao abrir o programa: deixa claro o papel e os limites do assistente.
 
 AVISO_INICIAL = (
     "CyberCidadão Assist orienta sobre segurança digital.\n"
@@ -26,6 +32,7 @@ def escolher_numero(mensagem, limite, permitir_voltar=True):
 
 
 def escolher_tema(registros):
+    """Mostra os temas da base em uma lista numerada e devolve o tema escolhido (ou None)."""
     temas = logica.temas_disponiveis(registros)
     print("\nTemas disponíveis:")
     for indice, tema in enumerate(temas, start=1):
@@ -37,7 +44,9 @@ def escolher_tema(registros):
 
 def mostrar_resposta(registro):
     """Exibe a fonte e permite seguir diretamente para um tema relacionado."""
+    # Modelo A: tema, orientação, fonte, data de verificação e aviso de canal oficial.
     print("\n" + logica.formatar_resposta(registro, "A") + "\n")
+    # O grafo de temas indica para onde a consulta pode continuar.
     relacionados = logica.temas_relacionados(registro["tema"])
     if not relacionados:
         return None
@@ -64,14 +73,18 @@ def navegar_por_tema(registros, tema):
 
 
 def consultar_pergunta(registros, tema=None):
+    """Fluxo da pergunta em texto: recebe, busca e trata os quatro resultados possíveis."""
     pergunta = input("Digite sua pergunta: ").strip()
     resultado = logica.buscar(pergunta, registros, tema)
+    # Entrada vazia: nada para buscar.
     if resultado["status"] == "vazio":
         print("Entrada vazia. Digite uma pergunta ou escolha um tema pelo menu.")
         return
+    # Sem correspondência confiável: avisa o limite e sugere os temas, sem inventar orientação.
     if resultado["status"] == "sem_resposta":
         print("\n" + logica.mensagem_sem_resposta() + "\n")
         return
+    # Empate entre orientações: o usuário escolhe, o programa não decide sozinho.
     if resultado["status"] == "ambiguo":
         print("\nHá mais de uma orientação possível. Escolha uma opção:")
         for indice, registro in enumerate(resultado["candidatos"], start=1):
@@ -82,6 +95,7 @@ def consultar_pergunta(registros, tema=None):
             return
         registro = resultado["candidatos"][numero - 1]
     else:
+        # Uma única orientação encontrada.
         registro = resultado["candidatos"][0]
     tema_relacionado = mostrar_resposta(registro)
     if tema_relacionado:
@@ -89,6 +103,10 @@ def consultar_pergunta(registros, tema=None):
 
 
 def fluxo_triagem():
+    """Faz quatro perguntas de sim/não e aplica a expressão booleana P·U·(L+R).
+
+    Não pede o texto da mensagem para não coletar dados pessoais.
+    """
     print("\nTriagem de mensagem suspeita (sem enviar ou copiar a mensagem).")
     perguntas = [
         ("pede_dados", "A mensagem pede dados pessoais, senhas ou códigos?"),
@@ -98,6 +116,7 @@ def fluxo_triagem():
     ]
     respostas = {}
     for chave, texto in perguntas:
+        # Repete a pergunta até receber "s" ou "n".
         while True:
             resposta = input(f"{texto} (s/n): ").strip().lower()
             if resposta in {"s", "n"}:
@@ -112,6 +131,7 @@ def fluxo_triagem():
 
 
 def menu(registros):
+    """Menu principal: repete até o usuário escolher 0 (sair)."""
     while True:
         print("=" * 56)
         print("MENU")
@@ -139,7 +159,9 @@ def menu(registros):
 
 
 def main():
+    """Ponto de entrada: carrega e valida a base antes de abrir o menu."""
     print(AVISO_INICIAL + "\n")
+    # Arquivo ausente, vazio ou com campos inválidos gera ErroBase com mensagem clara.
     try:
         registros = logica.carregar_base()
     except logica.ErroBase as erro:
@@ -147,6 +169,7 @@ def main():
         return 1
     try:
         menu(registros)
+    # Ctrl+C ou fim da entrada encerram o programa sem mostrar erro técnico.
     except (EOFError, KeyboardInterrupt):
         print("\nEncerrando.")
     return 0

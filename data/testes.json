@@ -16,6 +16,7 @@
     {"id": "T13", "tipo": "fora_da_base", "tema": null, "pergunta": "quem ganhou a copa do mundo", "esperado_status": "sem_resposta", "esperado_id": null},
     {"id": "T14", "tipo": "limite_entrada_vazia", "tema": null, "pergunta": "", "esperado_status": "vazio", "esperado_id": null},
     {"id": "T15", "tipo": "limite_ambiguidade", "tema": null, "pergunta": "conta", "esperado_status": "ambiguo", "esperado_id": null},
-    {"id": "T16", "tipo": "limite_tema_sem_correspondencia", "tema": "privacidade", "pergunta": "golpe do pix", "esperado_status": "sem_resposta", "esperado_id": null}
+    {"id": "T16", "tipo": "limite_tema_sem_correspondencia", "tema": "privacidade", "pergunta": "golpe do pix", "esperado_status": "sem_resposta", "esperado_id": null},
+    {"id": "T17", "tipo": "consulta_por_identificador", "tema": null, "pergunta": "s03", "esperado_status": "ok", "esperado_id": "S03"}
   ]
 }

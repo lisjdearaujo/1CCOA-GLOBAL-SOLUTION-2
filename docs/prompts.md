@@ -46,14 +46,14 @@ Confirme requisitos atualizados no canal oficial.
 
 ## Comparação aplicada às perguntas de teste
 
-A função `comparar_modelos()` em `src/testes.py` executa os dois formatos sobre as **10 consultas** de `data/testes.json` cujo resultado foi uma orientação única. São as mesmas consultas e os mesmos registros para A e B. O script contabiliza palavras e presença da fonte/aviso, mas **não mede compreensão humana**.
+A função `comparar_modelos()` em `src/testes.py` executa os dois formatos sobre as **11 consultas** de `data/testes.json` cujo resultado foi uma orientação única. São as mesmas consultas e os mesmos registros para A e B. O script contabiliza palavras e presença da fonte/aviso, mas **não mede compreensão humana**.
 
 | Critério | Modelo A | Modelo B |
 |---|---:|---:|
-| Consultas formatadas | 10 | 10 |
-| Média de palavras por resposta | 75,2 | 52,2 |
-| Respostas com fonte | 10/10 | 10/10 |
-| Respostas com aviso de canal oficial | 10/10 | 10/10 |
+| Consultas formatadas | 11 | 11 |
+| Média de palavras por resposta | 74,1 | 51,1 |
+| Respostas com fonte | 11/11 | 11/11 |
+| Respostas com aviso de canal oficial | 11/11 | 11/11 |
 | Identifica explicitamente o papel não oficial | Sim, na abertura | Não, apenas recomenda confirmar |
 | Separa tema e data em linhas próprias | Sim | Não |
 
