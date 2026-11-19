@@ -217,13 +217,6 @@ A interface web usa a mesma lógica do CLI. Se ela não funcionar, a avaliação
 
 ---
 
-## 🔗 Links do projeto
-
-- **Vídeo de apresentação (Não Listado):** [link do YouTube]
-- **Repositório modelo da coordenação:** https://github.com/equipe1ccon/FIAP-PORTFOLIO-1CCON
-
----
-
 ## 🧠 Decisões técnicas
 
 - **JSON para a base:** é um formato estruturado que o Python lê sem bibliotecas externas, e fica fácil de revisar e corrigir.
