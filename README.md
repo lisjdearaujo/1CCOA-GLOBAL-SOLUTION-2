@@ -16,7 +16,7 @@ Grupo 2
 ## 👨‍🎓 Integrantes
 
 - Lisandra Jacinto de Araujo (RM: 574055)
-- Eduardo Alves da Silva (RM: [RM do Eduardo])
+- Eduardo Alves da Silva (RM: 568601)
 
 ## 👩‍🏫 Professores
 
