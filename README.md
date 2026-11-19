@@ -173,7 +173,7 @@ O script `python src/testes.py` mede o tempo real de cada consulta, compara stat
 | Perguntas avaliadas | 17 |
 | Consultas corretas neste conjunto | 17 |
 | Taxa de acerto observada | **100,0%** |
-| Tempo médio observado | aproximadamente **0,8 ms** (varia conforme o computador) |
+| Tempo médio observado | cerca de **1 ms** (1,28 ms na execução registrada; varia conforme o computador) |
 | Equivalência da triagem | 16 de 16 combinações consistentes |
 | Orientações com fonte e data conferidas | 17 de 17 |
 | Comparação dos modelos | 11 consultas com resposta única: ambos citaram fonte e aviso |
