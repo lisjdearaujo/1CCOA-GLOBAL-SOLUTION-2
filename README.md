@@ -15,12 +15,18 @@ Grupo 2
 
 ## 👨‍🎓 Integrantes
 
-- Lisandra Araujo 
-- Eduardo Alves 
+- Lisandra Jacinto de Araujo (RM: 574055)
+- Eduardo Alves da Silva (RM: [RM do Eduardo])
 
 ## 👩‍🏫 Professores
 
-- Tutor(a): Lucas Gomes Jorge Gonçalez
+### Tutor(a)
+
+- Lucas Gomes Jorge Gonçalez
+
+### Coordenador(a)
+
+- [André Godoi Chiovato](https://www.linkedin.com/in/andregodoichiovato/)
 
 ---
 
@@ -54,7 +60,7 @@ Cidadãos encontram com frequência informações dispersas, termos técnicos e 
 │   ├── relatorio_roteiro.md Roteiro do relatório em PDF
 │   ├── resultados_testes.md Resultados gerados por src/testes.py
 │   ├── fontes_conferidas.md Conferência das referências e datas
-│   ├── teste_usabilidade.md Roteiro e registro do teste de facilidade de uso
+│   ├── teste_usabilidade.md Roteiro e resultados do teste de facilidade de uso
 │   ├── uso_ia.md            Uso de IA e validação crítica
 │   ├── link_video.txt       Link do vídeo no YouTube
 │   └── relatorio.pdf        Relatório final (4 a 8 páginas)
@@ -148,6 +154,9 @@ O script `python src/testes.py` mede o tempo real de cada consulta, compara stat
 | Equivalência da triagem | 16 de 16 combinações consistentes |
 | Orientações com fonte e data conferidas | 17 de 17 |
 | Comparação dos modelos | 10 consultas com resposta única: ambos citaram fonte e aviso |
+| Facilidade de uso: tarefas concluídas pelo roteiro | **4 de 4** |
+| Facilidade de uso: média de entradas por tarefa | **1,75** (menor caminho) |
+| Facilidade de uso: variações de frase resolvidas na tarefa 2 | **5 de 6** (83,3%) |
 
 **Correções realizadas após a avaliação inicial:**
 
@@ -157,9 +166,9 @@ O script `python src/testes.py` mede o tempo real de cada consulta, compara stat
 
 A avaliação anterior tinha **13/16 (81,2%)**; os resultados atuais são **16/16 (100,0%)** nas mesmas perguntas. Isso **não garante 100% de precisão** em perguntas desconhecidas: a amostra é pequena e os casos corrigidos pertencem à própria bateria de teste. Novos exemplos devem ser coletados para uma avaliação independente.
 
-**Facilidade de uso:** o roteiro de quatro tarefas está em `docs/teste_usabilidade.md`. **A execução com participante externo ainda precisa ser registrada pela equipe**; os testes automatizados não substituem essa etapa.
+**Facilidade de uso:** a avaliação foi feita por **roteiro de tarefas**, executado pela equipe com apoio de IA, sem participante externo (detalhes em `docs/teste_usabilidade.md`). As quatro tarefas foram concluídas, com 1,75 entrada em média pelo menor caminho. Cinco de seis frases do dia a dia para a mesma dúvida levaram direto à orientação certa; a sexta ("golpe por ligacao") gerou um empate que incluía uma opção sem relação (prêmio). A principal dificuldade foi o nome de alguns itens do menu por tema, como "Falsa central", que não descreve a situação do cidadão. Como a equipe conhece o sistema, esse resultado tende a ser otimista.
 
-**Interpretação e melhorias:** a busca por palavras-chave é rápida e reproduzível, mas depende de termos cadastrados. Recomenda-se (1) ampliar as paráfrases e sinônimos validados com consultas reais; (2) realizar testes com perguntas inéditas e usuários externos; (3) atualizar periodicamente a base documental. Os limites da avaliação e os tempos individuais estão em `docs/resultados_testes.md`.
+**Interpretação e melhorias:** a busca por palavras-chave é rápida e reproduzível, mas depende de termos cadastrados. Recomenda-se (1) ampliar as paráfrases e sinônimos validados com consultas reais; (2) criar um campo `titulo` descritivo para os itens do menu por tema; (3) realizar testes com perguntas inéditas e usuários externos; (4) atualizar periodicamente a base documental. Os limites da avaliação e os tempos individuais estão em `docs/resultados_testes.md`.
 
 ---
 
@@ -234,9 +243,9 @@ A interface web usa a mesma lógica do CLI. Se ela não funcionar, a avaliação
 
 ## 🏁 Conclusões, limitações e possibilidades de melhoria
 
-O CyberCidadão Assist implementa base, busca, navegação entre temas, tratamento de entradas inválidas, avisos de limitação, lógica booleana e testes automatizados. O teste com participante externo está roteirizado e depende da execução e registro pela equipe. Ele também evita afirmar com certeza que uma mensagem é golpe e não se apresenta como canal oficial.
+O CyberCidadão Assist implementa base, busca, navegação entre temas, tratamento de entradas inválidas, avisos de limitação, lógica booleana e testes automatizados. A facilidade de uso foi avaliada por roteiro de tarefas. O assistente também evita afirmar com certeza que uma mensagem é golpe e não se apresenta como canal oficial.
 
-**Limitações:** a busca depende de palavras cadastradas e pode produzir falsas correspondências em novas consultas, mesmo com T13 corrigido. A base contém 17 registros documentados em 19/11/2026 e exigirá revisão periódica. A avaliação com participante externo ainda precisa ser realizada e documentada. As melhorias estão na seção de testes.
+**Limitações:** a busca depende de palavras cadastradas e pode produzir falsas correspondências em novas consultas, mesmo com T13 corrigido. A base contém 17 registros documentados em 19/11/2026 e exigirá revisão periódica. A avaliação de facilidade de uso foi feita pela própria equipe, sem participante externo, e deve ser repetida com pessoas de fora. As melhorias estão na seção de testes.
 
 ---
 

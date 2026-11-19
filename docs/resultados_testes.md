@@ -8,8 +8,8 @@ Os tempos são medições locais desta execução e variam por computador. Não 
 - Consultas avaliadas: **16**
 - Consultas com resultado esperado: **16**
 - Taxa de acerto neste conjunto fixo: **100.0%**
-- Tempo médio de busca: **0.648 ms**
-- Menor/maior tempo: 0.002 / 0.789 ms
+- Tempo médio de busca: **1.291 ms**
+- Menor/maior tempo: 0.004 / 1.766 ms
 - Equivalência booleana da triagem: **16/16 combinações**
 - Base: **17 orientações**; datas pendentes: **0**
 
@@ -19,22 +19,22 @@ Os tempos são medições locais desta execução e variam por computador. Não 
 
 | ID | Tipo | Pergunta | Esperado (status / ID) | Obtido (status / ID) | Classificação | Tempo (ms) |
 |---|---|---|---|---|---|---|
-| T01 | direta | golpe do pix | ok / G01 | ok / G01 | acerto | 0.782 |
-| T02 | direta | como criar uma senha forte | ok / C02 | ok / C02 | acerto | 0.742 |
-| T03 | direta | o que é a LGPD | ok / P01 | ok / P01 | acerto | 0.719 |
-| T04 | direta | quero excluir meus dados | ok / P02 | ok / P02 | acerto | 0.723 |
-| T05 | reformulacao | me roubaram dinheiro pelo pix, o que faço | ok / G01 | ok / G01 | acerto | 0.789 |
-| T06 | reformulacao | ligaram dizendo ser do banco e pediram o token | ok / G02 | ok / G02 | acerto | 0.786 |
-| T07 | reformulacao | recebi um email estranho com um link | ok / G03 | ok / G03 | acerto | 0.726 |
-| T08 | reformulacao | perdi acesso à minha conta do Instagram | ok / C04 | ok / C04 | acerto | 0.745 |
-| T09 | reformulacao | como confirmo que um site é do governo | ok / S01 | ok / S01 | acerto | 0.740 |
-| T10 | reformulacao | posso usar wifi de restaurante para acessar o banco | ok / S03 | ok / S03 | acerto | 0.777 |
-| T11 | fora_da_base | qual a previsão do tempo para amanhã | sem_resposta / — | sem_resposta / — | acerto | 0.726 |
-| T12 | fora_da_base | como fazer um bolo de chocolate | sem_resposta / — | sem_resposta / — | acerto | 0.691 |
-| T13 | fora_da_base | quem ganhou a copa do mundo | sem_resposta / — | sem_resposta / — | acerto | 0.684 |
-| T14 | limite_entrada_vazia | (vazia) | vazio / — | vazio / — | acerto | 0.002 |
-| T15 | limite_ambiguidade | conta | ambiguo / — | ambiguo / — | acerto | 0.593 |
-| T16 | limite_tema_sem_correspondencia | golpe do pix | sem_resposta / — | sem_resposta / — | acerto | 0.149 |
+| T01 | direta | golpe do pix | ok / G01 | ok / G01 | acerto | 1.666 |
+| T02 | direta | como criar uma senha forte | ok / C02 | ok / C02 | acerto | 1.447 |
+| T03 | direta | o que é a LGPD | ok / P01 | ok / P01 | acerto | 1.279 |
+| T04 | direta | quero excluir meus dados | ok / P02 | ok / P02 | acerto | 1.299 |
+| T05 | reformulacao | me roubaram dinheiro pelo pix, o que faço | ok / G01 | ok / G01 | acerto | 1.482 |
+| T06 | reformulacao | ligaram dizendo ser do banco e pediram o token | ok / G02 | ok / G02 | acerto | 1.485 |
+| T07 | reformulacao | recebi um email estranho com um link | ok / G03 | ok / G03 | acerto | 1.392 |
+| T08 | reformulacao | perdi acesso à minha conta do Instagram | ok / C04 | ok / C04 | acerto | 1.314 |
+| T09 | reformulacao | como confirmo que um site é do governo | ok / S01 | ok / S01 | acerto | 1.287 |
+| T10 | reformulacao | posso usar wifi de restaurante para acessar o banco | ok / S03 | ok / S03 | acerto | 1.308 |
+| T11 | fora_da_base | qual a previsão do tempo para amanhã | sem_resposta / — | sem_resposta / — | acerto | 1.766 |
+| T12 | fora_da_base | como fazer um bolo de chocolate | sem_resposta / — | sem_resposta / — | acerto | 1.614 |
+| T13 | fora_da_base | quem ganhou a copa do mundo | sem_resposta / — | sem_resposta / — | acerto | 1.565 |
+| T14 | limite_entrada_vazia | (vazia) | vazio / — | vazio / — | acerto | 0.004 |
+| T15 | limite_ambiguidade | conta | ambiguo / — | ambiguo / — | acerto | 1.402 |
+| T16 | limite_tema_sem_correspondencia | golpe do pix | sem_resposta / — | sem_resposta / — | acerto | 0.349 |
 
 ## Orientações esperadas e retornadas
 
@@ -135,4 +135,4 @@ Os dois formatos foram aplicados às mesmas **10 consultas** que encontraram uma
 - A base tem somente 17 orientações; reformulações diferentes das testadas podem falhar.
 - As palavras-chave e o limiar de correspondência são regras manuais, não análise semântica.
 - Melhorias propostas: ampliar paráfrases e sinônimos revisados; testar perguntas reais de outras pessoas e registrar erros novos; revisar periodicamente as referências.
-- **Teste de facilidade de uso com participante:** o resultado não pode ser inferido dos testes automatizados. Preencher `docs/teste_usabilidade.md` depois da sessão real.
+- **Teste de facilidade de uso:** não é inferido destes testes automatizados. A avaliação por roteiro de tarefas está registrada em `docs/teste_usabilidade.md`.

@@ -157,8 +157,8 @@ def gerar_relatorio(linhas, triagem_ok, comparacao, pendentes, total_registros):
         "- As palavras-chave e o limiar de correspondência são regras manuais, não análise semântica.",
         "- Melhorias propostas: ampliar paráfrases e sinônimos revisados; testar perguntas reais "
         "de outras pessoas e registrar erros novos; revisar periodicamente as referências.",
-        "- **Teste de facilidade de uso com participante:** o resultado não pode ser inferido "
-        "dos testes automatizados. Preencher `docs/teste_usabilidade.md` depois da sessão real.",
+        "- **Teste de facilidade de uso:** não é inferido destes testes automatizados. A avaliação "
+        "por roteiro de tarefas está registrada em `docs/teste_usabilidade.md`.",
         "",
     ])
     return "\n".join(texto), taxa, media_ms, acertos
