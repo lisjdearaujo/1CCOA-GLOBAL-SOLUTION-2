@@ -24,10 +24,6 @@ Grupo 2
 
 - Lucas Gomes Jorge Gonçalez
 
-### Coordenador(a)
-
-- [André Godoi Chiovato](https://www.linkedin.com/in/andregodoichiovato/)
-
 ---
 
 ## 📜 Descrição do problema
@@ -237,7 +233,7 @@ A interface web usa a mesma lógica do CLI. Se ela não funcionar, a avaliação
 
 ## 📢 Observações gerais
 
-- **Participação na Competição:** [ ] Sim, aceitamos participar / [ ] Não vamos participar.
+- **Participação na Competição:** [] Sim, aceitamos participar / [X] Não vamos participar.
 
 ---
 
