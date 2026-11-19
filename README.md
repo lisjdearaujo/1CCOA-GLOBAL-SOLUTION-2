@@ -251,7 +251,7 @@ A interface web usa a mesma lógica do CLI. Se ela não funcionar, a avaliação
 
 ## 🔗 Links do projeto
 
-- **Vídeo de apresentação (YouTube, Não Listado):** [link do vídeo]
+- **Vídeo de apresentação (YouTube, Não Listado):** [https://youtu.be/zHGjNtchIWQ]
 - **Relatório final:** [`docs/relatorio.pdf`](docs/relatorio.pdf)
 
 ---
